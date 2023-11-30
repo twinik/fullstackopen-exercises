@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./Components/Filter";
 import PersonForm from "./Components/PersonForm";
 import PersonsList from "./Components/PersonsList";
+import Notification from "./Components/Notification";
 import personsService from "./Services/persons";
 
 function App() {
@@ -9,6 +10,8 @@ function App() {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     personsService.getAll().then((initialPersons) => {
@@ -33,10 +36,12 @@ function App() {
             setPersons(
               persons.map((p) => (p.id !== person.id ? p : returnedPerson))
             );
+            notification(`Updated ${returnedPerson.name}`, "success");
           })
           .catch(() => {
-            alert(
-              `the person '${person.name}' was already deleted from server`
+            notification(
+              `Information of ${person.name} has already been removed from server`,
+              "error"
             );
             setPersons(persons.filter((p) => p.id !== person.id));
           });
@@ -45,6 +50,7 @@ function App() {
       personsService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
       });
+      notification(`Added ${newPerson.name}`, "success");
     }
     setNewName("");
     setNewNumber("");
@@ -61,6 +67,14 @@ function App() {
 
   const alreadyExists = (name) => {
     return persons.some((person) => person.name === name);
+  };
+
+  const notification = (message, type) => {
+    setNotificationMessage(message);
+    setNotificationType(type);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 3000);
   };
 
   const handleNameChange = (event) => {
@@ -83,6 +97,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} type={notificationType} />
       <Filter value={filter} onChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
