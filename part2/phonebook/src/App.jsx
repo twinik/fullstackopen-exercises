@@ -21,7 +21,26 @@ function App() {
     const newPerson = { name: newName, number: newNumber };
 
     if (alreadyExists(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const person = persons.find((p) => p.name === newName);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personsService
+          .update(person.id, newPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((p) => (p.id !== person.id ? p : returnedPerson))
+            );
+          })
+          .catch(() => {
+            alert(
+              `the person '${person.name}' was already deleted from server`
+            );
+            setPersons(persons.filter((p) => p.id !== person.id));
+          });
+      }
     } else {
       personsService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
@@ -29,6 +48,15 @@ function App() {
     }
     setNewName("");
     setNewNumber("");
+  };
+
+  const handleDelete = (id) => {
+    const person = persons.find((p) => p.id === id);
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsService.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
   };
 
   const alreadyExists = (name) => {
@@ -50,15 +78,6 @@ function App() {
       person.name.toLowerCase().includes(filter.toLowerCase())
     );
     setPersons(filteredPersons);
-  };
-
-  const handleDelete = (id) => {
-    const person = persons.find((p) => p.id === id);
-    if (window.confirm(`Delete ${person.name}?`)) {
-      personsService.remove(id).then(() => {
-        setPersons(persons.filter((p) => p.id !== id));
-      });
-    }
   };
 
   return (
