@@ -12,6 +12,8 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
+app.use(express.static("dist"));
+
 let persons = [
   {
     id: 1,
@@ -32,6 +34,11 @@ let persons = [
     id: 4,
     name: "Mary Poppendieck",
     number: "39-23-6423122",
+  },
+  {
+    id: 5,
+    name: "Rami Malek",
+    number: "49-23-6400322",
   },
 ];
 
@@ -60,11 +67,11 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-getRandomInt = (max) => {
+const getRandomInt = (max) => {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
-nameExists = (name) => {
+const nameExists = (name) => {
   return persons.find((person) => person.name === name);
 };
 
@@ -102,7 +109,7 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
