@@ -47,10 +47,15 @@ function App() {
           });
       }
     } else {
-      personsService.create(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-      });
-      notification(`Added ${newPerson.name}`, "success");
+      personsService
+        .create(newPerson)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          notification(`Added ${newPerson.name}`, "success");
+        })
+        .catch((error) => {
+          notification(error.response.data.error, "error");
+        });
     }
     setNewName("");
     setNewNumber("");
