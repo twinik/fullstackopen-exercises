@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const mongoose = require("mongoose");
+/* const mongoose = require("mongoose");
 
 if (process.argv.length < 3) {
   console.log(
@@ -10,7 +10,7 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2];
 
-const url = `mongodb+srv://twinik:${password}@fullstackopen.7je1ptt.mongodb.net/phonebook?retryWrites=true&w=majority`;
+const url = `mongodb+srv://twinik:${password}@fullstackopen.7je1ptt.mongodb.net/bloglist?retryWrites=true&w=majority`;
 
 mongoose.connect(url);
 
@@ -43,4 +43,4 @@ if (process.argv.length < 4) {
     console.log(`added ${name} number ${number} to phonebook`);
     mongoose.connection.close();
   });
-}
+} */
