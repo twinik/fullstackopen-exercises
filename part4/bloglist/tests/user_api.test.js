@@ -9,7 +9,7 @@ describe("when there is initially one user in db", () => {
   beforeEach(async () => {
     await User.deleteMany({});
 
-    const passwordHash = await bcrypt.hash("sekret", 10);
+    const passwordHash = await bcrypt.hash("root", 10);
     const user = new User({ username: "root", passwordHash });
 
     await user.save();
@@ -19,9 +19,9 @@ describe("when there is initially one user in db", () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "mluukkai",
-      name: "Matti Luukkainen",
-      password: "salainen",
+      username: "testing",
+      name: "Test User",
+      password: "testing",
     };
 
     await api
@@ -43,7 +43,7 @@ describe("when there is initially one user in db", () => {
     const newUser = {
       username: "root",
       name: "Superuser",
-      password: "salainen",
+      password: "test",
     };
 
     const result = await api
@@ -56,5 +56,20 @@ describe("when there is initially one user in db", () => {
 
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toHaveLength(usersAtStart.length);
+  });
+
+  test("creation fails with proper statuscode and message if username is missing", async () => {
+    const newUser = {
+      name: "Test User",
+      password: "test",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect((res) => {
+        expect(res.body.error).toContain("`username` is required");
+      });
   });
 });
