@@ -6,7 +6,7 @@ It serves as an introduction to modern web application development with JavaScri
 
 GraphQL, a modern alternative to REST APIs is also covered by this course. As well as testing, configuration & environment management, and the use of MongoDB for storing the application’s data. A part on TypeScript can also be found on this year's edition. This repository contains my solutions for this course's exercises.
 
-[couse certificate]()
+[couse certificate](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/1ad4fda29fe7d9295fa0fb034c786d1b)
 
 ### [Part 0 - Fundamentals of Web apps](./part0)
 
