@@ -1,17 +1,23 @@
 const blogsRouter = require("express").Router();
-const Blog = require("../models/blog");
 const logger = require("../utils/logger");
+const Blog = require("../models/blog");
+const User = require("../models/user");
 
 // Try/catch no escritos por la biblioteca "express-async-errors"
 
 blogsRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate("user", {
+    username: 1,
+    name: 1,
+  });
   logger.info("blogs successfully retrieved");
   response.json(blogs);
 });
 
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
+
+  const user = await User.findById(body.userId);
 
   const blog = new Blog({
     _id: body._id,
@@ -20,6 +26,7 @@ blogsRouter.post("/", async (request, response) => {
     url: body.url,
     likes: body.likes,
     __v: body.__v,
+    user: user._id,
   });
 
   if (!blog.likes) {
@@ -28,6 +35,10 @@ blogsRouter.post("/", async (request, response) => {
 
   const savedBlog = await blog.save();
   logger.info(`blog ${blog.title} successfully saved`);
+
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+
   response.json(savedBlog);
 });
 
