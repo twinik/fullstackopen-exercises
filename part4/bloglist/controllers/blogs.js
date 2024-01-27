@@ -1,9 +1,7 @@
 /* eslint-disable no-undef */
-const jwt = require("jsonwebtoken");
 const blogsRouter = require("express").Router();
 const logger = require("../utils/logger");
 const Blog = require("../models/blog");
-const User = require("../models/user");
 
 // Try/catch no escritos por la biblioteca "express-async-errors"
 
@@ -18,9 +16,7 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
-  const token = request.token;
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  const user = await User.findById(decodedToken.id);
+  const user = request.user;
 
   const blog = new Blog({
     _id: body._id,
@@ -79,10 +75,7 @@ blogsRouter.put("/:id", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  const token = request.token;
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-
-  const user = await User.findById(decodedToken.id);
+  const user = request.user;
   const blogToDelete = await Blog.findById(request.params.id);
 
   if (blogToDelete.user._id.toString() === user._id.toString()) {
