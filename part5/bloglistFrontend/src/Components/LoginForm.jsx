@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function LoginForm({
   username,
   setUsername,
@@ -29,5 +31,13 @@ function LoginForm({
     </form>
   );
 }
+
+LoginForm.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
+  setUsername: PropTypes.func.isRequired,
+  setPassword: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+};
 
 export default LoginForm;
